@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "types": ["jest"],
+    "target": "es6",
+    "module": "commonjs",
+    "sourceMap": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*"]
+}
