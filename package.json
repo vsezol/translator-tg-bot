@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "dotenv": "^8.2.0",
-    "node-telegram-bot-api": "^0.51.0"
+    "js-base64": "^3.6.0",
+    "node-telegram-bot-api": "^0.51.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.13",
@@ -24,6 +26,7 @@
     "@types/dotenv": "^8.2.0",
     "@types/jest": "^26.0.20",
     "@types/node-telegram-bot-api": "^0.51.0",
+    "@types/uuid": "^8.3.0",
     "babel-jest": "^26.6.3",
     "jest": "^26.6.3",
     "nodemon": "^2.0.7",
