@@ -1,8 +1,13 @@
 process.env.NTBA_FIX_319 = '1';
+process.env.NTBA_FIX_350 = '1';
 
 import * as dotenv from 'dotenv';
 import * as TelegramBot from 'node-telegram-bot-api';
-import { createEncodeManager } from './encode';
+import {
+  createEncodeManager,
+  generatePathForEncodedFile,
+  getEncodedBufferFromText
+} from './encode';
 
 dotenv.config();
 
@@ -12,11 +17,16 @@ const bot = new TelegramBot(BOT_TOKEN, { polling: true });
 
 const handlers = {
   text: async (msg: TelegramBot.Message) => {
-    const encodeManager = createEncodeManager(msg.text);
+    const path = generatePathForEncodedFile();
+    const encodedBuffer = getEncodedBufferFromText(msg.text);
 
-    const filePath = await encodeManager.next().value;
+    console.log(encodedBuffer)
 
-    await bot.sendDocument(msg.chat.id, filePath);
+    const encodeManager = createEncodeManager(path, encodedBuffer);
+
+    await encodeManager.next().value;
+
+    await bot.sendDocument(msg.chat.id, path);
 
     await encodeManager.next().value;
   },
