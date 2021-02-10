@@ -6,7 +6,7 @@ import appConfig from './app.config';
 import { removeFile } from './remove';
 import { saveBufferAsFile } from './save';
 
-export function* createEncodeManager(path: string, buffer: Buffer): any {
+export function* createEncodeManager(path: string, buffer: Buffer) {
   yield saveBufferAsFile(path, buffer);
   yield removeFile(path);
 }
