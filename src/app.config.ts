@@ -1,5 +1,5 @@
 import * as path from 'path';
 
 export default {
-  tempFilesPath: path.resolve(__dirname, '..', 'temp')
+  tempFilesPath: path.resolve(__dirname, '..', 'temp'),
 };

@@ -4,7 +4,7 @@ import appConfig from '../app.config';
 import {
   createEncodeManager,
   generatePathForEncodedFile,
-  getEncodedBufferFromText
+  getEncodedBufferFromText,
 } from '../encode';
 
 jest.mock('../remove.ts');
@@ -94,14 +94,14 @@ describe('encode', () => {
     it('should call saveBufferAsFile with (path, buffer)', async () => {
       await encodedManager.next().value;
 
-      expect(saveBufferAsFile).toHaveBeenCalledWith(PATH, BUFFER)
+      expect(saveBufferAsFile).toHaveBeenCalledWith(PATH, BUFFER);
     });
 
     it('should call removeFile with (path)', async () => {
       await encodedManager.next().value;
       await encodedManager.next().value;
 
-      expect(removeFile).toHaveBeenCalledWith(PATH)
+      expect(removeFile).toHaveBeenCalledWith(PATH);
     });
   });
 });
