@@ -6,15 +6,17 @@
   "author": "vsezold@gmail.com",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
+    "start": "node dist/index.js",
     "build": "tsc -p .",
     "test": "jest --watch",
     "cover": "jest --coverage",
     "format": "prettier --write ."
   },
   "dependencies": {
+    "canvas": "^2.6.1",
     "dotenv": "^8.2.0",
+    "ffmpeg-extract-frames": "^2.0.2",
     "js-base64": "^3.6.0",
     "node-telegram-bot-api": "^0.51.0",
     "uuid": "^8.3.2"

@@ -1,107 +1,113 @@
-import * as path from 'path';
-import { Base64 } from 'js-base64';
-import appConfig from '../app.config';
-import {
-  createEncodeManager,
-  generatePathForEncodedFile,
-  getEncodedBufferFromText,
-} from '../encode';
+// import * as path from 'path';
+// import { Base64 } from 'js-base64';
+// import appConfig from '../app.config';
+// import {
+//   createEncodeManager,
+//   generatePathForEncodedFile,
+//   getEncodedBufferFromText,
+// } from '../encode';
 
-jest.mock('../remove.ts');
-jest.mock('../save.ts');
-import { removeFile } from '../remove';
-import { saveBufferAsFile } from '../save';
+// jest.mock('../remove.ts');
+// jest.mock('../save.ts');
+// import { removeFile } from '../RemoverFile';
+// import { saveBufferAsFile } from '../save';
 
-(removeFile as jest.Mock).mockResolvedValue(true);
-(saveBufferAsFile as jest.Mock).mockResolvedValue(true);
+// (removeFile as jest.Mock).mockResolvedValue(true);
+// (saveBufferAsFile as jest.Mock).mockResolvedValue(true);
 
-describe('encode', () => {
-  describe('generatePathForEncodedFile', () => {
-    it('should return string', () => {
-      const returnType = typeof generatePathForEncodedFile();
+// describe('encode', () => {
+//   describe('generatePathForEncodedFile', () => {
+//     it('should return string', () => {
+//       const returnType = typeof generatePathForEncodedFile();
 
-      expect(returnType).toBe('string');
-    });
+//       expect(returnType).toBe('string');
+//     });
 
-    it('should generate random path', () => {
-      const path1 = generatePathForEncodedFile();
-      const path2 = generatePathForEncodedFile();
+//     it('should generate random path', () => {
+//       const path1 = generatePathForEncodedFile();
+//       const path2 = generatePathForEncodedFile();
 
-      expect(path1).not.toEqual(path2);
-    });
+//       expect(path1).not.toEqual(path2);
+//     });
 
-    it('should generate path with base', () => {
-      const BASE_URL = appConfig.tempFilesPath;
+//     it('should generate path with base', () => {
+//       const BASE_URL = appConfig.tempFilesPath;
 
-      const path = generatePathForEncodedFile();
+//       const path = generatePathForEncodedFile();
 
-      expect(path).toMatch(BASE_URL);
-    });
-  });
+//       expect(path).toMatch(BASE_URL);
+//     });
 
-  describe('getEncodedBufferFromText', () => {
-    it('should return buffer', () => {
-      const text = 'TEST FOR TEST';
+//     it(`should generate path with ${appConfig.encodedFileExtension}`, () => {
+//       const path = generatePathForEncodedFile();
 
-      const returnData = getEncodedBufferFromText(text);
+//       expect(path).toMatch(appConfig.encodedFileExtension);
+//     });
+//   });
 
-      expect(returnData).toBeInstanceOf(Buffer);
-    });
+//   describe('getEncodedBufferFromText', () => {
+//     it('should return buffer', () => {
+//       const text = 'TEST FOR TEST';
 
-    describe('decode encoded buffer to begin text', () => {
-      it.each`
-        text
-        ${'TEST FOR TEST'}
-        ${'POPAJOPA'}
-        ${'KRINJ'}
-        ${'HELLO. How are You?!'}
-        ${'Русский текст'}
-      `('when text is $text', ({ text }) => {
-        const encodedBuffer = getEncodedBufferFromText(text);
-        const encodedText = encodedBuffer.toString();
-        const decodedText = Base64.decode(encodedText);
+//       const returnData = getEncodedBufferFromText(text);
 
-        expect(decodedText).toEqual(text);
-      });
-    });
-  });
+//       expect(returnData).toBeInstanceOf(Buffer);
+//     });
 
-  describe('createEncodeManager', () => {
-    let PATH;
-    let BUFFER;
-    let basePath;
+//     describe('decode encoded buffer to begin text', () => {
+//       it.each`
+//         text
+//         ${'TEST FOR TEST'}
+//         ${'POPAJOPA'}
+//         ${'KRINJ'}
+//         ${'HELLO. How are You?!'}
+//         ${'Русский текст'}
+//       `('when text is $text', ({ text }) => {
+//         const encodedBuffer = getEncodedBufferFromText(text);
+//         const encodedText = encodedBuffer.toString();
+//         const decodedText = Base64.decode(encodedText);
 
-    let encodedManager;
+//         expect(decodedText).toEqual(text);
+//       });
+//     });
+//   });
 
-    beforeAll(() => {
-      basePath = path.resolve(__dirname, '..', 'temp');
-      PATH = path.resolve(basePath, 'test.fuck');
-      BUFFER = Buffer.from(Base64.encode('test text'), 'base64');
-    });
+//   describe('createEncodeManager', () => {
+//     let PATH;
+//     let BUFFER;
+//     let basePath;
 
-    beforeEach(() => {
-      encodedManager = createEncodeManager(PATH, BUFFER);
-    });
+//     let encodedManager;
 
-    it('should return two promises in values', async () => {
-      await encodedManager.next().value;
-      await encodedManager.next().value;
+//     beforeAll(() => {
+//       basePath = path.resolve(__dirname, '..', 'temp');
+//       PATH = path.resolve(basePath, `test.${appConfig.encodedFileExtension}`);
+//       BUFFER = Buffer.from(Base64.encode('test text'), 'base64');
+//     });
 
-      expect(saveBufferAsFile).toHaveBeenCalled();
-      expect(removeFile).toHaveBeenCalled();
-    });
+//     beforeEach(() => {
+//       encodedManager = createEncodeManager(PATH, BUFFER);
+//     });
 
-    it('should call saveBufferAsFile with (path, buffer)', async () => {
-      await encodedManager.next().value;
+//     it('should return two promises in values', async () => {
+//       await encodedManager.next().value;
+//       await encodedManager.next().value;
 
-      expect(saveBufferAsFile).toHaveBeenCalledWith(PATH, BUFFER);
-    });
+//       expect(saveBufferAsFile).toHaveBeenCalled();
+//       expect(removeFile).toHaveBeenCalled();
+//     });
 
-    it('should call removeFile with (path)', async () => {
-      await encodedManager.next().value;
-      await encodedManager.next().value;
+//     it('should call saveBufferAsFile with (path, buffer)', async () => {
+//       await encodedManager.next().value;
 
-      expect(removeFile).toHaveBeenCalledWith(PATH);
-    });
-  });
-});
+//       expect(saveBufferAsFile).toHaveBeenCalledWith(PATH, BUFFER);
+//     });
+
+//     it('should call removeFile with (path)', async () => {
+//       await encodedManager.next().value;
+//       await encodedManager.next().value;
+
+//       expect(removeFile).toHaveBeenCalledWith(PATH);
+//     });
+//   });
+// });

@@ -1,11 +1,11 @@
+import { Base64 } from 'js-base64';
 import * as TelegramBot from 'node-telegram-bot-api';
 import * as path from 'path';
 
-import {
-  createEncodeManager,
-  generatePathForEncodedFile,
-  getEncodedBufferFromText,
-} from './encode';
+import { generatePathForEncodedFile } from './encode';
+import EncoderImageImpl from './EncoderImage';
+
+import * as extractFrames from 'ffmpeg-extract-frames';
 
 export class BotHandlers {
   bot: TelegramBot;
@@ -16,26 +16,43 @@ export class BotHandlers {
 
   async onText(msg: TelegramBot.Message) {
     const path = generatePathForEncodedFile();
-    const encodedBuffer = getEncodedBufferFromText(msg.text);
 
-    const encodeManager = createEncodeManager(path, encodedBuffer);
+    const encodedText = Base64.encode(msg.text);
+    const encoderImage = new EncoderImageImpl({
+      encodedText,
+      path,
+      pixelSize: 100,
+    });
 
-    await encodeManager.next().value;
+    encoderImage.encode();
 
-    try {
-      await this.bot.sendDocument(msg.chat.id, path);
-    } catch {
-      await this.onError(msg);
-    }
+    encoderImage
+      .save()
 
-    await encodeManager.next().value;
+      .then(() => Promise.resolve())
+      .catch((error) => {
+        console.log(error);
+        this.onError(msg);
+      })
+
+      .then(() => this.bot.sendDocument(msg.chat.id, path))
+      .catch((error) => {
+        console.log(error);
+        this.onError(msg);
+      })
+
+      .then(() => encoderImage.remove())
+      .catch((error) => {
+        console.log(error);
+        this.onError(msg);
+      });
   }
 
   async onFile(msg: TelegramBot.Message) {
     this.bot.sendMessage(msg.chat.id, 'Эта функция пока не доступна!');
   }
 
-  async onError(msg: TelegramBot.Message) {
+  private async onError(msg: TelegramBot.Message) {
     const errorSticker = path.join(
       __dirname,
       'assets',
