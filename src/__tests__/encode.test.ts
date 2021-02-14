@@ -58,7 +58,7 @@ describe('encode', () => {
         ${'Русский текст'}
       `('when text is $text', ({ text }) => {
         const encodedBuffer = getEncodedBufferFromText(text);
-        const encodedText = encodedBuffer.toString('base64');
+        const encodedText = encodedBuffer.toString();
         const decodedText = Base64.decode(encodedText);
 
         expect(decodedText).toEqual(text);

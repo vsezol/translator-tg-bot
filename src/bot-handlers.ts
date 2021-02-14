@@ -1,4 +1,5 @@
 import * as TelegramBot from 'node-telegram-bot-api';
+import * as path from 'path';
 
 import {
   createEncodeManager,
@@ -21,12 +22,26 @@ export class BotHandlers {
 
     await encodeManager.next().value;
 
-    await this.bot.sendDocument(msg.chat.id, path);
+    try {
+      await this.bot.sendDocument(msg.chat.id, path);
+    } catch {
+      await this.onError(msg);
+    }
 
     await encodeManager.next().value;
   }
 
   async onFile(msg: TelegramBot.Message) {
     this.bot.sendMessage(msg.chat.id, 'Эта функция пока не доступна!');
+  }
+
+  async onError(msg: TelegramBot.Message) {
+    const errorSticker = path.join(
+      __dirname,
+      'assets',
+      'stickers',
+      'error.webp'
+    );
+    await this.bot.sendSticker(msg.chat.id, errorSticker);
   }
 }

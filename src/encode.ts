@@ -13,7 +13,7 @@ export function* createEncodeManager(path: string, buffer: Buffer) {
 
 export function getEncodedBufferFromText(text: string): Buffer {
   const encodedText = Base64.encode(text);
-  const buffer = Buffer.from(encodedText, 'base64');
+  const buffer = Buffer.from(encodedText);
   return buffer;
 }
 
