@@ -3,9 +3,11 @@ import * as TelegramBot from 'node-telegram-bot-api';
 import * as path from 'path';
 
 import { generatePathForEncodedFile } from './encode';
-import EncoderImageImpl from './EncoderImage';
+import EncoderTextToImageImpl from './encoders/EncoderTextToImageImpl';
 
-import * as extractFrames from 'ffmpeg-extract-frames';
+import SaverImage from './SaverImage';
+import RemoverFile from './RemoverFile';
+import DrawerEncodedContentOnCanvasImpl from './drawers/DrawerEncodedContentToImageImpl';
 
 export class BotHandlers {
   bot: TelegramBot;
@@ -18,17 +20,18 @@ export class BotHandlers {
     const path = generatePathForEncodedFile();
 
     const encodedText = Base64.encode(msg.text);
-    const encoderImage = new EncoderImageImpl({
+
+    const encoderImage = new EncoderTextToImageImpl({
       encodedText,
-      path,
-      pixelSize: 100,
     });
+    const encodedContent = encoderImage.encode();
 
-    encoderImage.encode();
+    const drawerEncodedContentOnCanvas = new DrawerEncodedContentOnCanvasImpl({
+      encodedContent,
+    });
+    const canvas = drawerEncodedContentOnCanvas.draw();
 
-    encoderImage
-      .save()
-
+    SaverImage.save(path, canvas)
       .then(() => Promise.resolve())
       .catch((error) => {
         console.log(error);
@@ -41,7 +44,7 @@ export class BotHandlers {
         this.onError(msg);
       })
 
-      .then(() => encoderImage.remove())
+      .then(() => RemoverFile.remove(path))
       .catch((error) => {
         console.log(error);
         this.onError(msg);
