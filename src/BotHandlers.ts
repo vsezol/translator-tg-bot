@@ -2,12 +2,13 @@ import { Base64 } from 'js-base64';
 import * as TelegramBot from 'node-telegram-bot-api';
 import * as path from 'path';
 
-import { generatePathForEncodedFile } from './encode';
-import EncoderTextToImageImpl from './encoders/EncoderTextToImageImpl';
+import EncoderTextToImageImpl from '@/encoders/EncoderTextToImageImpl';
 
-import SaverImage from './SaverImage';
-import RemoverFile from './RemoverFile';
-import DrawerEncodedContentOnCanvasImpl from './drawers/DrawerEncodedContentToImageImpl';
+import SaverImage from '@/filers/SaverImage';
+import RemoverFile from '@/filers/RemoverFile';
+import PathGenerator from '@/filers/PathGenerator';
+
+import DrawerEncodedContentOnCanvasImpl from '@/drawers/DrawerEncodedContentToImageImpl';
 
 export class BotHandlers {
   bot: TelegramBot;
@@ -17,7 +18,7 @@ export class BotHandlers {
   }
 
   async onText(msg: TelegramBot.Message) {
-    const path = generatePathForEncodedFile();
+    const path = PathGenerator.generatePathForEncodedFile();
 
     const encodedText = Base64.encode(msg.text);
 

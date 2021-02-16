@@ -1,4 +1,4 @@
-import { EncoderTextToImage } from '../encoders/types';
+import { EncoderTextToImage } from '../encoders/encodersTypes';
 
 export namespace DrawerEncodedContentOnCanvas {
   export interface Props {

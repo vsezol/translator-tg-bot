@@ -1,6 +1,6 @@
 import { Canvas, createCanvas } from 'canvas';
-import { EncoderTextToImage } from '../encoders/types';
-import { DrawerEncodedContentOnCanvas } from './types';
+import { EncoderTextToImage } from '../types/encoders/encodersTypes';
+import { DrawerEncodedContentOnCanvas } from '../types/drawers/types';
 
 export default class DrawerEncodedContentOnCanvasImpl {
   private pixelSize: number;

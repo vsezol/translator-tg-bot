@@ -1,9 +1,7 @@
-import { EncoderTextToImage } from './types';
+import { EncoderTextToImage } from '../types/encoders/encodersTypes';
 
 export default class EncoderTextToImageImpl {
   charCodes: number[];
-
-  pixelSize: number;
 
   constructor({ encodedText }: EncoderTextToImage.Props) {
     const wrappedEncodedText = this.wrapEncodedText(encodedText);
@@ -12,6 +10,10 @@ export default class EncoderTextToImageImpl {
 
   private wrapEncodedText(encodedText: string) {
     return `<<<<${encodedText}>>>>`;
+  }
+
+  private textToCharCodes(text: string) {
+    return text.split('').map((item) => item.charCodeAt(0));
   }
 
   public encode(): EncoderTextToImage.EncodedImageContent {
@@ -56,9 +58,5 @@ export default class EncoderTextToImageImpl {
 
   private getRandomCodeForPixel() {
     return Math.floor(Math.random() * 255);
-  }
-
-  private textToCharCodes(text: string) {
-    return text.split('').map((item) => item.charCodeAt(0));
   }
 }
