@@ -7,7 +7,7 @@ export default class PathGenerator {
   static generatePathForEncodedFile(): string {
     const generatedPath = path.resolve(
       appConfig.tempFilesPath,
-      `${uuid.v1()}.${appConfig.encodedFileExtension}`
+      `${uuid.v1()}.${appConfig.encoded.fileExtension}`
     );
     return generatedPath;
   }
