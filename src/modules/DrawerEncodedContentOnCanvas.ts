@@ -1,10 +1,9 @@
 import { Canvas, createCanvas } from 'canvas';
-import { EncoderTextToImage } from '../types/encoders/encodersTypes';
-import { DrawerEncodedContentOnCanvas } from '../types/drawers/types';
+import { EncodedImageContent } from '../types/EncoderTextToImageTypes';
 
-export default class DrawerEncodedContentOnCanvasImpl {
+export default class DrawerEncodedContentOnCanvas {
   private pixelSize: number;
-  private encodedContent: EncoderTextToImage.EncodedImageContent;
+  private encodedContent: EncodedImageContent;
 
   private canvas: Canvas;
   private context: CanvasRenderingContext2D;
@@ -12,7 +11,10 @@ export default class DrawerEncodedContentOnCanvasImpl {
   constructor({
     pixelSize = 5,
     encodedContent,
-  }: DrawerEncodedContentOnCanvas.Props) {
+  }: {
+    pixelSize?: number;
+    encodedContent: EncodedImageContent;
+  }) {
     this.pixelSize = pixelSize;
     this.encodedContent = encodedContent;
 

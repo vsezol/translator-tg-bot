@@ -1,9 +1,9 @@
-import { EncoderTextToImage } from '../types/encoders/encodersTypes';
+import { EncodedImageContent } from '../types/EncoderTextToImageTypes';
 
-export default class EncoderTextToImageImpl {
+export default class EncoderTextToImage {
   charCodes: number[];
 
-  constructor({ encodedText }: EncoderTextToImage.Props) {
+  constructor({ encodedText }: { encodedText: string }) {
     const wrappedEncodedText = this.wrapEncodedText(encodedText);
     this.charCodes = this.textToCharCodes(wrappedEncodedText);
   }
@@ -16,15 +16,13 @@ export default class EncoderTextToImageImpl {
     return text.split('').map((item) => item.charCodeAt(0));
   }
 
-  public encode(): EncoderTextToImage.EncodedImageContent {
+  public encode(): EncodedImageContent {
     let encodedContent = this.charCodes.map((code) => this.getPixel(code));
     encodedContent = this.refillContentToSquare(encodedContent);
     return encodedContent;
   }
 
-  private refillContentToSquare(
-    encodedContent: EncoderTextToImage.EncodedImageContent
-  ) {
+  private refillContentToSquare(encodedContent: EncodedImageContent) {
     const squareDifference = this.calcSquareDifference();
     const randomContent = new Array(squareDifference)
       .fill('')

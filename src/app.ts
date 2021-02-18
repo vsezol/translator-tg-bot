@@ -1,6 +1,6 @@
 import TelegramBot = require('node-telegram-bot-api');
 
-import { BotHandlers } from '@/BotHandlers';
+import { BotHandlers } from '@/modules/BotHandlers';
 
 export function app(token: string) {
   const bot = new TelegramBot(token, { polling: true });

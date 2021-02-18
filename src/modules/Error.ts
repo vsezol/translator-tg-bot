@@ -8,7 +8,7 @@ export class SavingError extends Error {
   }
 }
 
-export class RemoveError extends Error {
+export class RemovingError extends Error {
   filePath: string;
 
   constructor(message: string, filePath: string) {

@@ -1,12 +1,12 @@
 import * as fs from 'fs';
-import { RemoveError } from '../Error';
+import { RemovingError } from '../Error';
 
-export default class RemoverFile {
+export default class FileRemover {
   static async remove(path: string) {
     try {
       await fs.promises.unlink(path);
     } catch (err) {
-      throw new RemoveError('Error while remove file', path);
+      throw new RemovingError('Error while remove file', path);
     }
   }
 }

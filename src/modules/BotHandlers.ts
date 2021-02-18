@@ -2,13 +2,13 @@ import { Base64 } from 'js-base64';
 import * as TelegramBot from 'node-telegram-bot-api';
 import * as path from 'path';
 
-import EncoderTextToImageImpl from '@/encoders/EncoderTextToImageImpl';
+import ImageWorker from '@/modules/file-workers/ImageWorker';
+import FileRemover from '@/modules/file-workers/FileRemover';
+import PathGenerator from '@/modules/file-workers/PathGenerator';
 
-import SaverImage from '@/filers/SaverImage';
-import RemoverFile from '@/filers/RemoverFile';
-import PathGenerator from '@/filers/PathGenerator';
+import EncoderTextToImage from '@/modules/EncoderTextToImage';
 
-import DrawerEncodedContentOnCanvasImpl from '@/drawers/DrawerEncodedContentToImageImpl';
+import DrawerEncodedContentOnCanvas from '@/modules/DrawerEncodedContentOnCanvas';
 
 export class BotHandlers {
   bot: TelegramBot;
@@ -22,17 +22,17 @@ export class BotHandlers {
 
     const encodedText = Base64.encode(msg.text);
 
-    const encoderImage = new EncoderTextToImageImpl({
+    const encoderImage = new EncoderTextToImage({
       encodedText,
     });
     const encodedContent = encoderImage.encode();
 
-    const drawerEncodedContentOnCanvas = new DrawerEncodedContentOnCanvasImpl({
+    const drawerEncodedContentOnCanvas = new DrawerEncodedContentOnCanvas({
       encodedContent,
     });
     const canvas = drawerEncodedContentOnCanvas.draw();
 
-    SaverImage.save(path, canvas)
+    ImageWorker.save(path, canvas)
       .then(() => Promise.resolve())
       .catch((error) => {
         console.log(error);
@@ -45,7 +45,7 @@ export class BotHandlers {
         this.onError(msg);
       })
 
-      .then(() => RemoverFile.remove(path))
+      .then(() => FileRemover.remove(path))
       .catch((error) => {
         console.log(error);
         this.onError(msg);
