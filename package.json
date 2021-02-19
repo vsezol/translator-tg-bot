@@ -20,6 +20,7 @@
     "js-base64": "^3.6.0",
     "module-alias": "^2.2.2",
     "node-telegram-bot-api": "^0.51.0",
+    "request": "^2.88.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

@@ -7,10 +7,11 @@ export function app(token: string) {
 
   bot.on('message', onMessage);
 
-  const botHandlers = new BotHandlers(bot);
+  const botHandlers = new BotHandlers(bot, token);
 
   async function onMessage(msg: TelegramBot.Message) {
-    if (msg?.document) await botHandlers.onFile(msg);
+    if (!!msg?.photo) await botHandlers.onPhoto(msg);
+    else if (!!msg?.document) await botHandlers.onFile(msg);
     else await botHandlers.onText(msg);
   }
 }

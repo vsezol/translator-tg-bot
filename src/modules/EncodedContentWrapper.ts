@@ -1,3 +1,4 @@
+import { app } from '@/app';
 import appConfig from '@/app.config';
 
 export default class EncodedContentWrapper {
@@ -8,7 +9,11 @@ export default class EncodedContentWrapper {
   }
 
   static unwrap(content: string): string {
-    return content
+    const endIndex = content.indexOf(appConfig.encoded.contentEnd);
+    const endLength = appConfig.encoded.contentEnd.length;
+    const cuttedContent = content.slice(0, endIndex + endLength);
+
+    return cuttedContent
       .replace(appConfig.encoded.contentBegin, '')
       .replace(appConfig.encoded.contentEnd, '');
   }
