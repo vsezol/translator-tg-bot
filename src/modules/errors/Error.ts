@@ -20,6 +20,14 @@ export class SavingError extends FileError {
   }
 }
 
+export class SendingError extends FileError {
+  chatId: string | number;
+  constructor(message: string, filePath: string, chatId: string | number) {
+    super('SendingError', message, filePath);
+    this.chatId = chatId;
+  }
+}
+
 export class DownloadingError extends Error {
   url: string;
 

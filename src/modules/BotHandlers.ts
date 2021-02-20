@@ -1,20 +1,13 @@
-import * as path from 'path';
-
 import * as TelegramBot from 'node-telegram-bot-api';
-import { Base64 } from 'js-base64';
 
-import ImageWorker from '@/modules/file-workers/ImageWorker';
 import FileRemover from '@/modules/file-workers/FileRemover';
-import PathGenerator from '@/modules/file-workers/PathGenerator';
 
-import EncoderTextToImage from '@/modules/EncoderTextToImage';
-
-import DrawerEncodedContentOnCanvas from '@/modules/DrawerEncodedContentOnCanvas';
-import { Canvas, loadImage } from 'canvas';
-import EncodedContentWrapper from './EncodedContentWrapper';
 import FileDownloaderFromTelegram from './file-workers/FileDownloaderFromTelegram';
 import DrawerEncodedImageOnCanvas from './DrawerEncodedImageOnCanvas';
 import DecoderImageToText from './DecoderImageToText';
+import FileSenderTelegram from './file-workers/FileSenderTelegram';
+import { SavingError, SendingError } from './errors/Error';
+import TransformerTextToEncodedImage from './TransformerTextToEncodedImage';
 
 export class BotHandlers {
   private bot: TelegramBot;
@@ -26,46 +19,19 @@ export class BotHandlers {
   }
 
   async onText(msg: TelegramBot.Message) {
-    const path = PathGenerator.generatePathForEncodedFile();
+    const canvas = TransformerTextToEncodedImage.transform(msg.text);
 
-    const encodedText = Base64.encode(msg.text);
-
-    const encoderImage = new EncoderTextToImage({
-      encodedText,
+    const fileSender = new FileSenderTelegram(this.bot);
+    await fileSender.send(msg.chat.id, canvas).catch((error) => {
+      if (error instanceof SavingError || error instanceof SendingError) {
+        this.onError(msg);
+      }
+      console.log(error);
     });
-    const encodedContent = encoderImage.encode();
-
-    const drawerEncodedContentOnCanvas = new DrawerEncodedContentOnCanvas({
-      encodedContent,
-      pixelSize: 1,
-    });
-    const canvas = drawerEncodedContentOnCanvas.draw();
-
-    ImageWorker.save(path, canvas)
-      .then(() => Promise.resolve())
-      .catch((error) => {
-        console.log(error);
-        this.onError(msg);
-      })
-
-      .then(() => this.bot.sendDocument(msg.chat.id, path))
-      .catch((error) => {
-        console.log(error);
-        this.onError(msg);
-      })
-
-      .then(() => FileRemover.remove(path))
-      .catch((error) => {
-        console.log(error);
-        this.onError(msg);
-      });
   }
 
   async onPhoto(msg: TelegramBot.Message) {
-    this.bot.sendMessage(
-      msg.chat.id,
-      'Пожалуйста отправьте фотографию документом!'
-    );
+    this.bot.sendMessage(msg.chat.id, 'Please send photo as document!');
   }
 
   async onFile(msg: TelegramBot.Message) {
@@ -85,16 +51,12 @@ export class BotHandlers {
     const decoderImageToText = new DecoderImageToText(context, size);
     const decodedContent = decoderImageToText.decode();
 
-    this.bot.sendMessage(msg.chat.id, decodedContent);
+    await this.bot.sendMessage(msg.chat.id, decodedContent);
+
+    FileRemover.remove(downloadedImagePath);
   }
 
   private async onError(msg: TelegramBot.Message) {
-    const errorSticker = path.join(
-      __dirname,
-      'assets',
-      'stickers',
-      'error.webp'
-    );
-    this.bot.sendSticker(msg.chat.id, errorSticker);
+    this.bot.sendMessage(msg.chat.id, 'Error in operation. Sorry :(');
   }
 }
