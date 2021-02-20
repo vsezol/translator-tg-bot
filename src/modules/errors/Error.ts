@@ -19,3 +19,13 @@ export class SavingError extends FileError {
     super('SavingError', message, filePath);
   }
 }
+
+export class DownloadingError extends Error {
+  url: string;
+
+  constructor(message: string, url: string) {
+    super(message);
+    this.name = 'DownloadingError';
+    this.url = url;
+  }
+}

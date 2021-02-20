@@ -1,8 +1,6 @@
-import * as fs from 'fs';
 import * as path from 'path';
 
 import * as TelegramBot from 'node-telegram-bot-api';
-import * as request from 'request';
 import { Base64 } from 'js-base64';
 
 import ImageWorker from '@/modules/file-workers/ImageWorker';
@@ -13,8 +11,8 @@ import EncoderTextToImage from '@/modules/EncoderTextToImage';
 
 import DrawerEncodedContentOnCanvas from '@/modules/DrawerEncodedContentOnCanvas';
 import { Canvas, loadImage } from 'canvas';
-import appConfig from '@/app.config';
 import EncodedContentWrapper from './EncodedContentWrapper';
+import FileDownloaderFromTelegram from './file-workers/FileDownloaderFromTelegram';
 
 export class BotHandlers {
   bot: TelegramBot;
@@ -70,16 +68,10 @@ export class BotHandlers {
 
   async onFile(msg: TelegramBot.Message) {
     const fileId = msg.document.file_id;
-    const { file_path } = await this.bot.getFile(fileId);
 
-    const downloadURL = `https://api.telegram.org/file/bot${this.token}/${file_path}`;
+    const fileDownloader = new FileDownloaderFromTelegram(this.bot, this.token);
 
-    const downloadedImagePath = path.join(
-      appConfig.tempFilesPath,
-      `${fileId}.${appConfig.encoded.fileExtension}`
-    );
-
-    await download(downloadURL, downloadedImagePath);
+    const downloadedImagePath = await fileDownloader.downloadImage(fileId);
 
     const size = msg.document.thumb.width;
     const canvas = new Canvas(size, size);
@@ -121,16 +113,4 @@ export class BotHandlers {
     );
     this.bot.sendSticker(msg.chat.id, errorSticker);
   }
-}
-
-function download(url, path) {
-  return new Promise((resolve, reject) => {
-    request.head(url, (err, res, body) => {
-      if (err) reject(err);
-      request(url)
-        .pipe(fs.createWriteStream(path))
-        .on('close', resolve)
-        .on('error', (err) => reject(err));
-    });
-  });
 }
