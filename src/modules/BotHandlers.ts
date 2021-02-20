@@ -13,10 +13,12 @@ import DrawerEncodedContentOnCanvas from '@/modules/DrawerEncodedContentOnCanvas
 import { Canvas, loadImage } from 'canvas';
 import EncodedContentWrapper from './EncodedContentWrapper';
 import FileDownloaderFromTelegram from './file-workers/FileDownloaderFromTelegram';
+import DrawerEncodedImageOnCanvas from './DrawerEncodedImageOnCanvas';
+import DecoderImageToText from './DecoderImageToText';
 
 export class BotHandlers {
-  bot: TelegramBot;
-  token: string;
+  private bot: TelegramBot;
+  private token: string;
 
   constructor(bot: TelegramBot, token: string) {
     this.bot = bot;
@@ -74,32 +76,14 @@ export class BotHandlers {
     const downloadedImagePath = await fileDownloader.downloadImage(fileId);
 
     const size = msg.document.thumb.width;
-    const canvas = new Canvas(size, size);
-    const context = canvas.getContext('2d');
+    const drawerEncodedImageOnCanvas = new DrawerEncodedImageOnCanvas(size);
 
-    await loadImage(downloadedImagePath).then((image) => {
-      context.drawImage(image, 0, 0, size, size);
-      return Promise.resolve();
-    });
-
-    let encodedContent = '';
-    for (let x = 0; x < size; x++) {
-      for (let y = 0; y < size; y++) {
-        const pixel = context.getImageData(x, y, size, size).data;
-        const [red, green, blue] = pixel;
-
-        const charCode = red;
-
-        const encodedLetter = String.fromCharCode(charCode);
-
-        encodedContent += encodedLetter;
-      }
-    }
-
-    const unwrappedEncodedContent = EncodedContentWrapper.unwrap(
-      encodedContent
+    const { context } = await drawerEncodedImageOnCanvas.draw(
+      downloadedImagePath
     );
-    const decodedContent = Base64.decode(unwrappedEncodedContent);
+
+    const decoderImageToText = new DecoderImageToText(context, size);
+    const decodedContent = decoderImageToText.decode();
 
     this.bot.sendMessage(msg.chat.id, decodedContent);
   }

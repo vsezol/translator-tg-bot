@@ -29,3 +29,10 @@ export class DownloadingError extends Error {
     this.url = url;
   }
 }
+
+export class DrawingImageError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'DrawingImageError';
+  }
+}
