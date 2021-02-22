@@ -3,8 +3,6 @@ import * as TelegramBot from 'node-telegram-bot-api';
 import FileRemover from '@/modules/file-workers/FileRemover';
 
 import FileDownloaderFromTelegram from './file-workers/FileDownloaderFromTelegram';
-import DrawerEncodedImageOnCanvas from './DrawerEncodedImageOnCanvas';
-import DecoderImageToText from './DecoderImageToText';
 import FileSenderTelegram from './file-workers/FileSenderTelegram';
 import { SavingError, SendingError } from './errors/Error';
 import TransformerTextToEncodedImage from './TransformerTextToEncodedImage';

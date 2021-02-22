@@ -12,5 +12,5 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*", "src/__tests__/**/*", "bot-handlers.ts"]
+  "include": ["src/**/*", "dist"]
 }
