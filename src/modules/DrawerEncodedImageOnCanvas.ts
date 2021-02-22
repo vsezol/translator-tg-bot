@@ -5,7 +5,6 @@ export default class DrawerEncodedImageOnCanvas {
   private canvas: Canvas;
   private context: CanvasRenderingContext2D;
   private size: number;
-  private path: string;
 
   constructor(size: number) {
     this.size = size;

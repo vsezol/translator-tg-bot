@@ -4,7 +4,7 @@ import DrawerEncodedContentOnCanvas from './DrawerEncodedContentOnCanvas';
 import EncoderTextToImage from './EncoderTextToImage';
 
 export default class TransformerTextToEncodedImage {
-  static transform(text) {
+  static transform(text: string) {
     const encodedText = Base64.encode(text);
 
     const encoderImage = new EncoderTextToImage({

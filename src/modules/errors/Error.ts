@@ -44,3 +44,4 @@ export class DrawingImageError extends Error {
     this.name = 'DrawingImageError';
   }
 }
+
