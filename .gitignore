@@ -6,5 +6,8 @@ package-lock.json
 
 .vscode
 
+temp
 dist
 coverage
+
+.env
