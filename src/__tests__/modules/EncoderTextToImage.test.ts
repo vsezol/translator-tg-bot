@@ -1,7 +1,7 @@
 import { Base64 } from 'js-base64';
 
 import EncoderTextToImage from '@/modules/EncoderTextToImage';
-import EncodedContentWrapper from '@/modules/EncodedContentWrapper';
+import WrapperEncodedContent from '@/modules/WrapperEncodedContent';
 
 describe('EncoderTextToImage', () => {
   describe('constructor', () => {
@@ -9,7 +9,7 @@ describe('EncoderTextToImage', () => {
       const FAKE_TEXT = 'FAKE teXt To TeSt :)';
       const FAKE_ENCODED_TEXT = Base64.encode(FAKE_TEXT);
 
-      jest.spyOn(EncodedContentWrapper, 'wrap');
+      jest.spyOn(WrapperEncodedContent, 'wrap');
 
       const encoderTextToImage = new EncoderTextToImage({
         encodedText: FAKE_ENCODED_TEXT,
@@ -17,7 +17,7 @@ describe('EncoderTextToImage', () => {
 
       encoderTextToImage.encode();
 
-      expect(EncodedContentWrapper.wrap).toHaveBeenCalled();
+      expect(WrapperEncodedContent.wrap).toHaveBeenCalled();
     });
   });
 

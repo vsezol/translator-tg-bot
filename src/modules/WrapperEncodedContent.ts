@@ -1,7 +1,7 @@
 import { app } from '@/app';
 import appConfig from '@/app.config';
 
-export default class EncodedContentWrapper {
+export default class WrapperEncodedContent {
   static wrap(content: string): string {
     return (
       appConfig.encoded.contentBegin + content + appConfig.encoded.contentEnd

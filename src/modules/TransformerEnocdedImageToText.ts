@@ -2,12 +2,12 @@ import DecoderImageToText from './DecoderImageToText';
 import DrawerEncodedImageOnCanvas from './DrawerEncodedImageOnCanvas';
 
 export default class TransformerEnocdedImageToText {
-  static async transform(path: string, size: number) {
+  static async transform(path: string, size: number, pixelSize: number) {
     const drawerEncodedImageOnCanvas = new DrawerEncodedImageOnCanvas(size);
 
     try {
       const { context } = await drawerEncodedImageOnCanvas.draw(path);
-      const decoderImageToText = new DecoderImageToText(context, size);
+      const decoderImageToText = new DecoderImageToText(context, size, pixelSize);
       const decodedContent = decoderImageToText.decode();
 
       return decodedContent;

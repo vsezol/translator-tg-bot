@@ -1,11 +1,11 @@
 import { EncodedImageContent } from '../types/EncoderTextToImageTypes';
-import EncodedContentWrapper from './EncodedContentWrapper';
+import WrapperEncodedContent from './WrapperEncodedContent';
 
 export default class EncoderTextToImage {
   private charCodes: number[];
 
   constructor({ encodedText }: { encodedText: string }) {
-    const wrappedEncodedText = EncodedContentWrapper.wrap(encodedText);
+    const wrappedEncodedText = WrapperEncodedContent.wrap(encodedText);
     this.charCodes = this.textToCharCodes(wrappedEncodedText);
   }
 
