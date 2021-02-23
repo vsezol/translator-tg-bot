@@ -7,6 +7,7 @@ export default {
   },
   encoded: {
     fileExtension: 'jpg',
+    pixelSize: 5,
     contentBegin: '<<<<',
     contentEnd: '>>>>',
   },

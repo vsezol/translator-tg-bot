@@ -1,4 +1,4 @@
-import { FileError, SavingError, RemovingError } from '@/modules/errors/Error';
+import { SavingError, RemovingError } from '@/modules/errors';
 
 describe('Error', () => {
   const FAKE_MESSAGE = 'FAKE_MESSAGE';

@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { Canvas } from 'canvas';
-import { SavingError } from '@/modules/errors/Error';
+import { SavingError } from '@/modules/errors';
 
 export default class ImageSaver {
   static async save(path: string, canvas: Canvas) {

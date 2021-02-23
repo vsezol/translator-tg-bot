@@ -2,9 +2,8 @@ import { Base64 } from 'js-base64';
 
 import ContentDrawer from '@/modules/drawers/ContentDrawer';
 import ImageEncoder from '@/modules/ImageEncoder';
-import ImageSaver from '../fileWorkers/ImageSaver';
-import { RemovingError, SavingError } from '../errors/Error';
-import FileRemover from '../fileWorkers/FileRemover';
+import { ImageSaver, FileRemover } from '@/modules/fileWorkers';
+import { RemovingError, SavingError } from '../errors';
 
 export default class TextToImageTransformer {
   private text: string;

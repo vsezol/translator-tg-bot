@@ -1,6 +1,6 @@
 import * as TelegramBot from 'node-telegram-bot-api';
 
-import { SendingError } from '@/modules/errors/Error';
+import { SendingError } from '@/modules/errors';
 export default class FileSender {
   private bot: TelegramBot;
   constructor(bot: TelegramBot) {

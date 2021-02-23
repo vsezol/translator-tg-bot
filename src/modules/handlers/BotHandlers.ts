@@ -1,24 +1,28 @@
 import * as TelegramBot from 'node-telegram-bot-api';
 
-import FileRemover from '@/modules/fileWorkers/FileRemover';
-
-import ImageDownloader from '@/modules/fileWorkers/ImageDownloader';
-import FileSender from '@/modules/fileWorkers/FileSender';
-import { SavingError, SendingError } from '@/modules/errors/Error';
-import TextToImageTransformer from '@/modules/transformers/TextToImageTransformer';
-import ImageToTextTransformer from '@/modules/transformers/ImageToTextTransformer';
-import CommandParser from '@/modules/CommandParser';
+import appConfig from '@/app.config';
+import {
+  FileSender,
+  FileRemover,
+  ImageDownloader,
+} from '@/modules/fileWorkers';
+import { SavingError, SendingError } from '@/modules/errors';
+import {
+  TextToImageTransformer,
+  ImageToTextTransformer,
+} from '@/modules/transformers';
 import Logger from '@/modules/Logger';
-import PathGenerator from './utils/PathGenerator';
+import { PathGenerator } from '@/modules/utils';
 
-export class BotHandlers {
+export default class BotHandlers {
   private bot: TelegramBot;
   private token: string;
-  private pixelSize: number = 5;
+  private pixelSize: number;
 
   constructor(bot: TelegramBot, token: string) {
     this.bot = bot;
     this.token = token;
+    this.pixelSize = appConfig.encoded.pixelSize;
   }
 
   onCmdStart(msg: TelegramBot.Message) {
@@ -26,14 +30,6 @@ export class BotHandlers {
       msg.chat.id,
       'Hello! I can convert text to encoded image and back!'
     );
-  }
-
-  onCmdSet(msg: TelegramBot.Message) {
-    const cmd = CommandParser.parseCommand(msg.text);
-    if (cmd.name === 'password') {
-    } else {
-      this.bot.sendMessage(msg.chat.id, 'Sorry, unknown command!');
-    }
   }
 
   async onText(msg: TelegramBot.Message) {
@@ -56,16 +52,6 @@ export class BotHandlers {
     await this.sendFile(msg, path);
 
     textToImageTransformer.clear();
-  }
-
-  private async sendFile(msg: TelegramBot.Message, path: string) {
-    const fileSender = new FileSender(this.bot);
-    await fileSender.send(msg.chat.id, path).catch((error) => {
-      if (error instanceof SendingError) {
-        this.onError(msg);
-      }
-      console.log(error);
-    });
   }
 
   async onFile(msg: TelegramBot.Message) {
@@ -92,5 +78,15 @@ export class BotHandlers {
 
   onError(msg: TelegramBot.Message) {
     this.bot.sendMessage(msg.chat.id, 'Error in operation. Sorry :(');
+  }
+
+  private async sendFile(msg: TelegramBot.Message, path: string) {
+    const fileSender = new FileSender(this.bot);
+    await fileSender.send(msg.chat.id, path).catch((error) => {
+      if (error instanceof SendingError) {
+        this.onError(msg);
+      }
+      console.log(error);
+    });
   }
 }

@@ -1,5 +1,5 @@
 import { ImageContent } from '@/types/EncoderTextToImageTypes';
-import StringWrapper from '@/modules/utils/StringWrapper';
+import { StringWrapper } from '@/modules/utils';
 import appConfig from '@/app.config';
 
 export default class ImageEncoder {
