@@ -1,14 +1,15 @@
 import * as TelegramBot from 'node-telegram-bot-api';
 
-import FileRemover from '@/modules/file-workers/FileRemover';
+import FileRemover from '@/modules/fileWorkers/FileRemover';
 
-import ImageDownloader from '@/modules/file-workers/ImageDownloader';
-import FileSender from '@/modules/file-workers/FileSender';
+import ImageDownloader from '@/modules/fileWorkers/ImageDownloader';
+import FileSender from '@/modules/fileWorkers/FileSender';
 import { SavingError, SendingError } from '@/modules/errors/Error';
-import EncodedImageFromTextTransformer from '@/modules/transformers/EncodedImageFromTextTransformer';
-import EnocdedImageToTextTransformer from '@/modules/transformers/EnocdedImageToTextTransformer';
+import TextToImageTransformer from '@/modules/transformers/TextToImageTransformer';
+import ImageToTextTransformer from '@/modules/transformers/ImageToTextTransformer';
 import CommandParser from '@/modules/CommandParser';
 import Logger from '@/modules/Logger';
+import PathGenerator from './utils/PathGenerator';
 
 export class BotHandlers {
   private bot: TelegramBot;
@@ -30,8 +31,6 @@ export class BotHandlers {
   onCmdSet(msg: TelegramBot.Message) {
     const cmd = CommandParser.parseCommand(msg.text);
     if (cmd.name === 'password') {
-    } else if (cmd.name === 'pixelSize') {
-      this.pixelSize = +cmd.value;
     } else {
       this.bot.sendMessage(msg.chat.id, 'Sorry, unknown command!');
     }
@@ -40,14 +39,29 @@ export class BotHandlers {
   async onText(msg: TelegramBot.Message) {
     Logger.logMessage(msg);
 
-    const canvas = EncodedImageFromTextTransformer.transform({
+    const path = PathGenerator.generatePathForEncodedFile();
+
+    const textToImageTransformer = new TextToImageTransformer({
+      outPath: path,
       text: msg.text,
       pixelSize: this.pixelSize,
     });
 
+    await textToImageTransformer.transform().catch((error) => {
+      if (error instanceof SavingError) {
+        this.onError(msg);
+      }
+    });
+
+    await this.sendFile(msg, path);
+
+    textToImageTransformer.clear();
+  }
+
+  private async sendFile(msg: TelegramBot.Message, path: string) {
     const fileSender = new FileSender(this.bot);
-    await fileSender.send(msg.chat.id, canvas).catch((error) => {
-      if (error instanceof SavingError || error instanceof SendingError) {
+    await fileSender.send(msg.chat.id, path).catch((error) => {
+      if (error instanceof SendingError) {
         this.onError(msg);
       }
       console.log(error);
@@ -59,17 +73,17 @@ export class BotHandlers {
     const size = msg.document.thumb.width;
 
     const fileDownloader = new ImageDownloader(this.bot, this.token);
-    const downloadedImagePath = await fileDownloader.downloadImage(fileId);
+    const imgPath = await fileDownloader.downloadImage(fileId);
 
-    const decodedText = await EnocdedImageToTextTransformer.transform({
-      path: downloadedImagePath,
+    const decodedText = await ImageToTextTransformer.transform({
+      path: imgPath,
       pixelSize: this.pixelSize,
       size,
     });
 
     await this.bot.sendMessage(msg.chat.id, decodedText);
 
-    FileRemover.remove(downloadedImagePath);
+    FileRemover.remove(imgPath);
   }
 
   onPhoto(msg: TelegramBot.Message) {

@@ -4,7 +4,7 @@ import * as request from 'request';
 import * as TelegramBot from 'node-telegram-bot-api';
 
 import { DownloadingError, SavingError } from '@/modules/errors/Error';
-import PathGenerator from '@/modules/file-workers/PathGenerator';
+import PathGenerator from '@/modules/utils/PathGenerator';
 
 class FileDownloader {
   protected download(url, path) {

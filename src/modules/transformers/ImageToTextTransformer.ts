@@ -1,7 +1,7 @@
 import ImageDecoder from '@/modules/ImageDecoder';
 import ImageDrawer from '@/modules/drawers/ImageDrawer';
 
-export default class EnocdedImageToTextTransformer {
+export default class ImageToTextTransformer {
   static async transform({
     path,
     size,
