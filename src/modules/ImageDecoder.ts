@@ -1,17 +1,21 @@
 import appConfig from '@/app.config';
-import WrapperEncodedContent from '@/modules/WrapperEncodedContent';
+import StringWrapper from '@/modules/StringWrapper';
 import { Base64 } from 'js-base64';
 
-export default class DecoderImageToText {
+export default class ImageDecoder {
   private context: CanvasRenderingContext2D;
   private size: number;
   private pixelSize: number;
 
-  constructor(
-    context: CanvasRenderingContext2D,
-    size: number,
-    pixelSize: number = 5
-  ) {
+  constructor({
+    context,
+    size,
+    pixelSize,
+  }: {
+    context: CanvasRenderingContext2D;
+    size: number;
+    pixelSize: number;
+  }) {
     this.context = context;
     this.size = size / pixelSize;
     this.pixelSize = pixelSize;
@@ -20,7 +24,7 @@ export default class DecoderImageToText {
   decode() {
     const encodedContent = this.getEncodedContent();
 
-    const wrapper = new WrapperEncodedContent({
+    const wrapper = new StringWrapper({
       begin: appConfig.encoded.contentBegin,
       end: appConfig.encoded.contentEnd,
     });

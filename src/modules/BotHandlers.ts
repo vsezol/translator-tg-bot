@@ -5,9 +5,9 @@ import FileRemover from '@/modules/file-workers/FileRemover';
 import ImageDownloader from '@/modules/file-workers/ImageDownloader';
 import FileSender from '@/modules/file-workers/FileSender';
 import { SavingError, SendingError } from '@/modules/errors/Error';
-import TransformerTextToEncodedImage from '@/modules/TransformerTextToEncodedImage';
-import TransformerEnocdedImageToText from '@/modules/TransformerEnocdedImageToText';
-import ParserCommand from '@/modules/ParserCommand';
+import EncodedImageFromTextTransformer from '@/modules/transformers/EncodedImageFromTextTransformer';
+import EnocdedImageToTextTransformer from '@/modules/transformers/EnocdedImageToTextTransformer';
+import CommandParser from '@/modules/CommandParser';
 import Logger from '@/modules/Logger';
 
 export class BotHandlers {
@@ -28,7 +28,7 @@ export class BotHandlers {
   }
 
   onCmdSet(msg: TelegramBot.Message) {
-    const cmd = ParserCommand.parseCommand(msg.text);
+    const cmd = CommandParser.parseCommand(msg.text);
     if (cmd.name === 'password') {
     } else if (cmd.name === 'pixelSize') {
       this.pixelSize = +cmd.value;
@@ -40,10 +40,10 @@ export class BotHandlers {
   async onText(msg: TelegramBot.Message) {
     Logger.logMessage(msg);
 
-    const canvas = TransformerTextToEncodedImage.transform(
-      msg.text,
-      this.pixelSize
-    );
+    const canvas = EncodedImageFromTextTransformer.transform({
+      text: msg.text,
+      pixelSize: this.pixelSize,
+    });
 
     const fileSender = new FileSender(this.bot);
     await fileSender.send(msg.chat.id, canvas).catch((error) => {
@@ -61,11 +61,11 @@ export class BotHandlers {
     const fileDownloader = new ImageDownloader(this.bot, this.token);
     const downloadedImagePath = await fileDownloader.downloadImage(fileId);
 
-    const decodedText = await TransformerEnocdedImageToText.transform(
-      downloadedImagePath,
+    const decodedText = await EnocdedImageToTextTransformer.transform({
+      path: downloadedImagePath,
+      pixelSize: this.pixelSize,
       size,
-      this.pixelSize
-    );
+    });
 
     await this.bot.sendMessage(msg.chat.id, decodedText);
 

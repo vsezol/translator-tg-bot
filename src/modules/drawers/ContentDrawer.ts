@@ -1,22 +1,22 @@
 import { Canvas, createCanvas } from 'canvas';
-import { EncodedImageContent } from '@/types/EncoderTextToImageTypes';
+import { ImageContent } from '../../types/EncoderTextToImageTypes';
 
-export default class DrawerEncodedContentOnCanvas {
+export default class ContentDrawer {
   private pixelSize: number;
-  private encodedContent: EncodedImageContent;
+  private content: ImageContent;
 
   private canvas: Canvas;
   private context: CanvasRenderingContext2D;
 
   constructor({
-    pixelSize = 5,
-    encodedContent,
+    pixelSize,
+    content,
   }: {
-    pixelSize?: number;
-    encodedContent: EncodedImageContent;
+    pixelSize: number;
+    content: ImageContent;
   }) {
     this.pixelSize = pixelSize;
-    this.encodedContent = encodedContent;
+    this.content = content;
 
     this.initCanvas();
   }
@@ -30,7 +30,7 @@ export default class DrawerEncodedContentOnCanvas {
     let pixelNumber = 0;
     for (let x = 0; x < this.size; x++) {
       for (let y = 0; y < this.size; y++) {
-        let rgb = this.encodedContent[pixelNumber];
+        let rgb = this.content[pixelNumber];
 
         this.drawPixel(rgb, [x, y]);
 
@@ -63,7 +63,7 @@ export default class DrawerEncodedContentOnCanvas {
   }
 
   private get size() {
-    const length = this.encodedContent.length;
+    const length = this.content.length;
     return Math.sqrt(length);
   }
 }

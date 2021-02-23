@@ -1,4 +1,4 @@
-export default class ParserCommand {
+export default class CommandParser {
   static isCommand(text: string, cmd: string) {
     return text.split(' ')[0] === cmd;
   }

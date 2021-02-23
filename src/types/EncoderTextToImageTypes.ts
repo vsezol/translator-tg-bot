@@ -1,1 +1,1 @@
-export type EncodedImageContent = number[][];
+export type ImageContent = number[][];
