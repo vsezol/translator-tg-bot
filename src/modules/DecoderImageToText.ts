@@ -1,3 +1,4 @@
+import appConfig from '@/app.config';
 import WrapperEncodedContent from '@/modules/WrapperEncodedContent';
 import { Base64 } from 'js-base64';
 
@@ -19,9 +20,11 @@ export default class DecoderImageToText {
   decode() {
     const encodedContent = this.getEncodedContent();
 
-    const unwrappedEncodedContent = WrapperEncodedContent.unwrap(
-      encodedContent
-    );
+    const wrapper = new WrapperEncodedContent({
+      begin: appConfig.encoded.contentBegin,
+      end: appConfig.encoded.contentEnd,
+    });
+    const unwrappedEncodedContent = wrapper.unwrap(encodedContent);
 
     const decodedContent = Base64.decode(unwrappedEncodedContent);
 

@@ -1,19 +1,27 @@
 import appConfig from '@/app.config';
 
+interface Wrapper {
+  begin: string;
+  end: string;
+}
+
 export default class WrapperEncodedContent {
-  static wrap(content: string): string {
-    return (
-      appConfig.encoded.contentBegin + content + appConfig.encoded.contentEnd
-    );
+  wrapper: Wrapper;
+
+  constructor(wrapper: Wrapper) {
+    this.wrapper = wrapper;
   }
 
-  static unwrap(content: string): string {
-    const endIndex = content.indexOf(appConfig.encoded.contentEnd);
-    const endLength = appConfig.encoded.contentEnd.length;
-    const cuttedContent = content.slice(0, endIndex + endLength);
+  wrap(content: string): string {
+    return this.wrapper.begin + content + this.wrapper.end;
+  }
 
-    return cuttedContent
-      .replace(appConfig.encoded.contentBegin, '')
-      .replace(appConfig.encoded.contentEnd, '');
+  unwrap(content: string): string {
+    const { begin, end } = this.wrapper;
+
+    const endIndex = content.indexOf(end);
+    const cuttedContent = content.slice(0, endIndex + end.length);
+
+    return cuttedContent.replace(begin, '').replace(end, '');
   }
 }

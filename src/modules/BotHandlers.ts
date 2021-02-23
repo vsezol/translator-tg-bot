@@ -2,8 +2,8 @@ import * as TelegramBot from 'node-telegram-bot-api';
 
 import FileRemover from '@/modules/file-workers/FileRemover';
 
-import FileDownloaderFromTelegram from '@/modules/file-workers/FileDownloaderFromTelegram';
-import FileSenderTelegram from '@/modules/file-workers/FileSenderTelegram';
+import ImageDownloader from '@/modules/file-workers/ImageDownloader';
+import FileSender from '@/modules/file-workers/FileSender';
 import { SavingError, SendingError } from '@/modules/errors/Error';
 import TransformerTextToEncodedImage from '@/modules/TransformerTextToEncodedImage';
 import TransformerEnocdedImageToText from '@/modules/TransformerEnocdedImageToText';
@@ -45,7 +45,7 @@ export class BotHandlers {
       this.pixelSize
     );
 
-    const fileSender = new FileSenderTelegram(this.bot);
+    const fileSender = new FileSender(this.bot);
     await fileSender.send(msg.chat.id, canvas).catch((error) => {
       if (error instanceof SavingError || error instanceof SendingError) {
         this.onError(msg);
@@ -58,7 +58,7 @@ export class BotHandlers {
     const fileId = msg.document.file_id;
     const size = msg.document.thumb.width;
 
-    const fileDownloader = new FileDownloaderFromTelegram(this.bot, this.token);
+    const fileDownloader = new ImageDownloader(this.bot, this.token);
     const downloadedImagePath = await fileDownloader.downloadImage(fileId);
 
     const decodedText = await TransformerEnocdedImageToText.transform(

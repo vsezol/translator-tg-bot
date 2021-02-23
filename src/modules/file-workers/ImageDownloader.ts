@@ -27,7 +27,7 @@ class FileDownloader {
   }
 }
 
-export default class FileDownloaderFromTelegram extends FileDownloader {
+export default class ImageDownloader extends FileDownloader {
   private token: string;
   private bot: TelegramBot;
 

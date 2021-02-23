@@ -1,13 +1,17 @@
 import * as TelegramBot from 'node-telegram-bot-api';
 import { Canvas } from 'canvas';
 
-import { RemovingError, SavingError, SendingError } from '@/modules/errors/Error';
+import {
+  RemovingError,
+  SavingError,
+  SendingError,
+} from '@/modules/errors/Error';
 
 import FileRemover from '@/modules/file-workers/FileRemover';
-import ImageWorker from '@/modules/file-workers/ImageWorker';
+import ImageSaver from '@/modules/file-workers/ImageSaver';
 import PathGenerator from '@/modules/file-workers/PathGenerator';
 
-export default class FileSenderTelegram {
+export default class FileSender {
   private bot: TelegramBot;
   constructor(bot: TelegramBot) {
     this.bot = bot;
@@ -16,7 +20,7 @@ export default class FileSenderTelegram {
   async send(chatId: number, canvas: Canvas) {
     const path = PathGenerator.generatePathForEncodedFile();
 
-    await ImageWorker.save(path, canvas).catch(() => {
+    await ImageSaver.save(path, canvas).catch(() => {
       throw new SavingError(
         'Error in saving file before sending to user.',
         path
