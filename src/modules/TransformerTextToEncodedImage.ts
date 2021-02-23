@@ -1,7 +1,7 @@
 import { Base64 } from 'js-base64';
 
-import DrawerEncodedContentOnCanvas from './DrawerEncodedContentOnCanvas';
-import EncoderTextToImage from './EncoderTextToImage';
+import DrawerEncodedContentOnCanvas from '@/modules/DrawerEncodedContentOnCanvas';
+import EncoderTextToImage from '@/modules/EncoderTextToImage';
 
 export default class TransformerTextToEncodedImage {
   static transform(text: string, pixelSize: number) {

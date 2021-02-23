@@ -1,4 +1,3 @@
-import { app } from '@/app';
 import appConfig from '@/app.config';
 
 export default class WrapperEncodedContent {

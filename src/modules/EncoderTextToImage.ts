@@ -1,5 +1,5 @@
-import { EncodedImageContent } from '../types/EncoderTextToImageTypes';
-import WrapperEncodedContent from './WrapperEncodedContent';
+import { EncodedImageContent } from '@/types/EncoderTextToImageTypes';
+import WrapperEncodedContent from '@/modules/WrapperEncodedContent';
 
 export default class EncoderTextToImage {
   private charCodes: number[];

@@ -2,13 +2,13 @@ import * as TelegramBot from 'node-telegram-bot-api';
 
 import FileRemover from '@/modules/file-workers/FileRemover';
 
-import FileDownloaderFromTelegram from './file-workers/FileDownloaderFromTelegram';
-import FileSenderTelegram from './file-workers/FileSenderTelegram';
-import { SavingError, SendingError } from './errors/Error';
-import TransformerTextToEncodedImage from './TransformerTextToEncodedImage';
-import Logger from './Logger';
-import TransformerEnocdedImageToText from './TransformerEnocdedImageToText';
-import ParserCommand from './ParserCommand';
+import FileDownloaderFromTelegram from '@/modules/file-workers/FileDownloaderFromTelegram';
+import FileSenderTelegram from '@/modules/file-workers/FileSenderTelegram';
+import { SavingError, SendingError } from '@/modules/errors/Error';
+import TransformerTextToEncodedImage from '@/modules/TransformerTextToEncodedImage';
+import TransformerEnocdedImageToText from '@/modules/TransformerEnocdedImageToText';
+import ParserCommand from '@/modules/ParserCommand';
+import Logger from '@/modules/Logger';
 
 export class BotHandlers {
   private bot: TelegramBot;

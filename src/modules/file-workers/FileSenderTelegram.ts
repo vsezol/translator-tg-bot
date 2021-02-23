@@ -1,11 +1,11 @@
 import * as TelegramBot from 'node-telegram-bot-api';
 import { Canvas } from 'canvas';
 
-import { RemovingError, SavingError, SendingError } from '../errors/Error';
+import { RemovingError, SavingError, SendingError } from '@/modules/errors/Error';
 
-import FileRemover from './FileRemover';
-import ImageWorker from './ImageWorker';
-import PathGenerator from './PathGenerator';
+import FileRemover from '@/modules/file-workers/FileRemover';
+import ImageWorker from '@/modules/file-workers/ImageWorker';
+import PathGenerator from '@/modules/file-workers/PathGenerator';
 
 export default class FileSenderTelegram {
   private bot: TelegramBot;

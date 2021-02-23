@@ -1,5 +1,5 @@
-import DecoderImageToText from './DecoderImageToText';
-import DrawerEncodedImageOnCanvas from './DrawerEncodedImageOnCanvas';
+import DecoderImageToText from '@/modules/DecoderImageToText';
+import DrawerEncodedImageOnCanvas from '@/modules/DrawerEncodedImageOnCanvas';
 
 export default class TransformerEnocdedImageToText {
   static async transform(path: string, size: number, pixelSize: number) {

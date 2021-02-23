@@ -1,5 +1,5 @@
 import { Canvas, CanvasRenderingContext2D, loadImage } from 'canvas';
-import { DrawingImageError } from './errors/Error';
+import { DrawingImageError } from '@/modules/errors/Error';
 
 export default class DrawerEncodedImageOnCanvas {
   private canvas: Canvas;

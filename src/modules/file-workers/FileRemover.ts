@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { RemovingError } from '../errors/Error';
+import { RemovingError } from '@/modules/errors/Error';
 
 export default class FileRemover {
   static async remove(path: string) {

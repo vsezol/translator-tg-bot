@@ -3,8 +3,8 @@ import * as fs from 'fs';
 import * as request from 'request';
 import * as TelegramBot from 'node-telegram-bot-api';
 
-import { DownloadingError, SavingError } from '../errors/Error';
-import PathGenerator from './PathGenerator';
+import { DownloadingError, SavingError } from '@/modules/errors/Error';
+import PathGenerator from '@/modules/file-workers/PathGenerator';
 
 class FileDownloader {
   protected download(url, path) {

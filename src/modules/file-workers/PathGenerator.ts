@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as uuid from 'uuid';
 
-import appConfig from '../../app.config';
+import appConfig from '@/app.config';
 
 export default class PathGenerator {
   static generatePathForEncodedFile(): string {
