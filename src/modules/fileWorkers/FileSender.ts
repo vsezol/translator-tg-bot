@@ -9,6 +9,7 @@ export default class FileSender {
 
   async send(chatId: number, path: string) {
     await this.bot.sendDocument(chatId, path).catch((error) => {
+      console.log('ERROR')
       throw new SendingError(
         'Error in sending file to user after saving.',
         path,
